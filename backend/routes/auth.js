@@ -66,8 +66,10 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });  // Password mismatch
         }
 
+        console.log('JWT_SECRET:', process.env.JWT_SECRET); // Log the JWT secret for debugging
         // Create JWT token
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
 
         res.json({ message: 'Login successful', token });
     } catch (error) {

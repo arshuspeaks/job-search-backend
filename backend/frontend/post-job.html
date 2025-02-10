@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply for Job</title>
+    <title>Post a Job</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Apply for Job</h1>
-        <form id="applicationForm">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+        <h1>Post a Job</h1>
+        <form id="jobForm">
+            <label for="title">Job Title:</label>
+            <input type="text" id="title" name="title" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company" required>
 
-            <input type="hidden" id="jobId" name="jobId" value="">
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
 
-            <button type="submit">Submit Application</button>
+            <label for="description">Job Description:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <button type="submit">Post Job</button>
         </form>
     </div>
 
@@ -30,26 +34,26 @@
         })
         .then(response => {
             if (!response.ok) {
-                alert('You must be logged in to apply for a job.');
+                alert('You must be logged in to post a job.');
                 window.location.href = '/login.html'; // Redirect to login page
             }
         });
 
         // Handle form submission
-        document.getElementById('applicationForm').addEventListener('submit', function(event) {
+        document.getElementById('jobForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(this);
-            fetch('/api/applications/apply', {
+            fetch('/api/jobs', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
             })
             .then(response => {
                 if (response.ok) {
-                    alert('Application submitted successfully!');
+                    alert('Job posted successfully!');
                     window.location.href = '/'; // Redirect to home page
                 } else {
-                    alert('Error submitting application.');
+                    alert('Error posting job.');
                 }
             });
         });

@@ -45,7 +45,9 @@ mongoose.connect(mongoURI)
       console.error('Error fetching job entries:', err);
     });
 
-    // Start the server after successful connection to MongoDB
+console.log('JWT_SECRET:', process.env.JWT_SECRET); // Log the JWT secret for debugging
+// Start the server after successful connection to MongoDB
+
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });
