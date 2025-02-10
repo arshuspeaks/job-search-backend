@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #00c6ff, #0072ff);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        #job-details {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: block;
+            color: #f1f1f1;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #1a1a1a;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="submit"] {
+            background: #00c6ff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: #0072ff;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            #job-details {
+                padding: 20px;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="job-details">
+        <!-- Job details will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Fetch job details from localStorage
+        const job = JSON.parse(localStorage.getItem('jobDetails'));
+
+        if (job) {
+            // Display job details on the form page
+            document.getElementById('job-details').innerHTML = `
+                <h1>Job Application Form</h1>
+                <h3>${job.title}</h3>
+                <p><strong>Company:</strong> ${job.company}</p>
+                <p><strong>Location:</strong> ${job.location}</p>
+                <p><strong>Description:</strong> ${job.description}</p>
+                <form id="application-form">
+                    <label for="applicant-name">Your Name:</label>
+                    <input type="text" id="applicant-name" name="applicant-name" required><br><br>
+                    <label for="applicant-email">Your Email:</label>
+                    <input type="email" id="applicant-email" name="applicant-email" required><br><br>
+                    <input type="submit" value="Submit Application">
+                </form>
+            `;
+        } else {
+            document.getElementById('job-details').innerHTML = '<p>Job details not found.</p>';
+        }
+
+        // Handle the form submission
+        document.getElementById('application-form')?.addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting and reloading the page
+
+            // Collect the form data
+            const name = document.getElementById('applicant-name').value;
+            const email = document.getElementById('applicant-email').value;
+            const jobId = job._id; // Get the job ID from the job details
+
+            // Send application data to the server
+            fetch('http://localhost:3000/api/applications/apply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, jobId }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data); // Show success message
+                document.getElementById('application-form').reset(); // Clear the form
+            })
+            .catch(error => {
+                alert('Error submitting application. Please try again.');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
